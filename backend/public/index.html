@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Plant Protect — Dashboard</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-photo min-h-screen antialiased">
+
+    <!-- Header -->
+    <header class="glass-bar sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="bg-[#2f7b4f] p-2 rounded-lg">
+                    <i class="fa-solid fa-leaf text-white text-lg"></i>
+                </div>
+                <div>
+                    <h1 class="text-lg font-bold text-[#1f2b24] leading-none">Plant Protect</h1>
+                    <p class="text-[11px] text-[#445048]">Monitoreo y diagnóstico de cultivos</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Contenido Principal -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+            <!-- COLUMNA IZQUIERDA -->
+            <div class="lg:col-span-5 space-y-6">
+
+                <!-- Tarjeta: Sensores -->
+                <section class="glass-card p-6">
+                    <div class="flex items-center justify-between mb-5">
+                        <h2 class="text-lg font-semibold text-[#1f2b24] flex items-center gap-2">
+                            <i class="fa-solid fa-chart-simple text-[#2f7b4f]"></i>
+                            Datos del Cultivo
+                        </h2>
+                        <span class="text-xs text-[#445048]">cada 5s</span>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-3 mb-5">
+                        <!-- Temperatura -->
+                        <div class="text-center">
+                            <svg viewBox="0 0 100 60" class="w-full">
+                                <path d="M 10 55 A 40 40 0 0 1 90 55" fill="none" stroke="#e2e8e4" stroke-width="8" stroke-linecap="round"/>
+                                <line id="tempNeedle" x1="50" y1="55" x2="50" y2="20" stroke="#c98a2e" stroke-width="3" stroke-linecap="round" class="gauge-needle" style="transform: rotate(0deg);"/>
+                                <circle cx="50" cy="55" r="3.5" fill="#445048"/>
+                            </svg>
+                            <span class="text-[11px] font-medium text-[#445048] block -mt-1">Temperatura</span>
+                            <div class="text-base font-semibold text-[#1f2b24]"><span id="temp">--</span>°C</div>
+                        </div>
+                        <!-- Humedad -->
+                        <div class="text-center">
+                            <svg viewBox="0 0 100 60" class="w-full">
+                                <path d="M 10 55 A 40 40 0 0 1 90 55" fill="none" stroke="#e2e8e4" stroke-width="8" stroke-linecap="round"/>
+                                <line id="humNeedle" x1="50" y1="55" x2="50" y2="20" stroke="#3e7c99" stroke-width="3" stroke-linecap="round" class="gauge-needle" style="transform: rotate(0deg);"/>
+                                <circle cx="50" cy="55" r="3.5" fill="#445048"/>
+                            </svg>
+                            <span class="text-[11px] font-medium text-[#445048] block -mt-1">Humedad</span>
+                            <div class="text-base font-semibold text-[#1f2b24]"><span id="hum">--</span>%</div>
+                        </div>
+                        <!-- Luminosidad -->
+                        <div class="text-center">
+                            <svg viewBox="0 0 100 60" class="w-full">
+                                <path d="M 10 55 A 40 40 0 0 1 90 55" fill="none" stroke="#e2e8e4" stroke-width="8" stroke-linecap="round"/>
+                                <line id="lightNeedle" x1="50" y1="55" x2="50" y2="20" stroke="#2f7b4f" stroke-width="3" stroke-linecap="round" class="gauge-needle" style="transform: rotate(0deg);"/>
+                                <circle cx="50" cy="55" r="3.5" fill="#445048"/>
+                            </svg>
+                            <span class="text-[11px] font-medium text-[#445048] block -mt-1">Luz</span>
+                            <div class="text-base font-semibold text-[#1f2b24]"><span id="light">--</span>%</div>
+                        </div>
+                    </div>
+
+                    <div id="estadoSaludCard" class="p-3.5 rounded-lg bg-white/70 border border-[#2f7b4f]/25 text-sm">
+                        <div id="estadoSaludText" class="text-[#1f2b24] leading-relaxed text-xs">
+                            <i class="fa-solid fa-spinner animate-spin mr-1"></i> Iniciando análisis de sensores...
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3 mt-4">
+                        <button onclick="recomendarAccion()" class="btn-flat flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-semibold rounded-lg bg-white/70 text-[#2f7b4f] border border-[#2f7b4f]/25 hover:bg-white">
+                            <i class="fa-solid fa-droplet"></i>
+                            Receta de riego
+                        </button>
+                        <button onclick="hablarConAsistente()" class="btn-flat flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-semibold rounded-lg bg-white/70 text-[#3e7c99] border border-[#3e7c99]/25 hover:bg-white">
+                            <i class="fa-solid fa-volume-high"></i>
+                            Diagnóstico por voz
+                        </button>
+                    </div>
+                </section>
+
+                <!-- Tarjeta: Webcam -->
+                <section class="glass-card p-6">
+                    <h2 class="text-lg font-semibold text-[#1f2b24] flex items-center gap-2 mb-4">
+                        <i class="fa-solid fa-video text-[#2f7b4f]"></i>
+                        Escáner en Vivo
+                    </h2>
+
+                    <div class="relative w-full aspect-video rounded-lg bg-white/60 border border-white/60 overflow-hidden flex items-center justify-center">
+                        <video id="webcam" autoplay playsinline muted class="hidden absolute inset-0 w-full h-full object-cover"></video>
+                        <img id="annotatedFrame" class="hidden absolute inset-0 w-full h-full object-cover" alt="Frame de video procesado">
+                        <canvas id="canvas" class="hidden"></canvas>
+
+                        <div id="webcamPlaceholder" class="text-center p-4">
+                            <div class="w-11 h-11 rounded-full bg-white/70 flex items-center justify-center mx-auto mb-2 border border-white/60">
+                                <i class="fa-solid fa-camera-retro text-[#445048]"></i>
+                            </div>
+                            <p class="text-xs text-[#445048]">Cámara inactiva. Inicia el escaneo para ver el follaje en vivo.</p>
+                        </div>
+                    </div>
+
+                    <div id="realtimeResult" class="mt-3 text-xs text-[#1f2b24] font-medium text-center min-h-[1.5rem]"></div>
+
+                    <div class="mt-4">
+                        <button id="startWebcam" onclick="startWebcam()" class="btn-flat w-full py-2.5 px-4 rounded-lg text-xs font-bold text-white bg-[#2f7b4f] hover:bg-[#286a44] flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-play"></i> Iniciar cámara
+                        </button>
+                        <button id="stopWebcam" onclick="stopWebcam()" class="hidden btn-flat w-full py-2.5 px-4 rounded-lg text-xs font-bold text-white bg-[#c23b2e] hover:bg-[#a63024] flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-stop text-[10px]"></i> Detener cámara
+                        </button>
+                    </div>
+                </section>
+
+            </div>
+
+            <!-- COLUMNA DERECHA -->
+            <div class="lg:col-span-7 space-y-6">
+
+                <!-- Tarjeta: Subir y Detectar -->
+                <section class="glass-card p-6" id="contenedorImagenes">
+                    <h2 class="text-lg font-semibold text-[#1f2b24] flex items-center gap-2 mb-4">
+                        <i class="fa-solid fa-magnifying-glass-chart text-[#2f7b4f]"></i>
+                        Subir y Detectar
+                    </h2>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
+                        <!-- Panel de Controles -->
+                        <div class="space-y-4">
+                            <div class="relative border-2 border-dashed border-[#2f7b4f]/30 hover:border-[#2f7b4f]/60 rounded-lg p-4 cursor-pointer flex flex-col items-center justify-center min-h-[140px] bg-white/50" onclick="document.getElementById('inputImagen').click()">
+                                <input type="file" id="inputImagen" accept="image/*" class="hidden" onchange="mostrarImagen(event)">
+                                <div id="uploadPlaceholder" class="text-center">
+                                    <i class="fa-solid fa-cloud-arrow-up text-[#445048] text-2xl mb-2"></i>
+                                    <p class="text-xs font-semibold text-[#1f2b24]">Seleccionar imagen</p>
+                                    <p class="text-[10px] text-[#445048] mt-1">JPEG, PNG, JPG</p>
+                                </div>
+                                <img id="vistaPrevia" class="hidden max-h-[120px] rounded-lg object-contain border border-white/60" alt="Vista previa original">
+                            </div>
+
+                            <div>
+                                <label class="block text-[11px] font-semibold text-[#445048] mb-1.5">Seleccionar modelo de visión</label>
+                                <div class="relative">
+                                    <select id="modeloVision" class="w-full bg-white/80 border border-[#2f7b4f]/25 text-xs text-[#1f2b24] rounded-lg px-3.5 py-2.5 focus:border-[#2f7b4f] focus:ring-0 appearance-none cursor-pointer">
+                                        <option value="deteccion_plagas">Detección de plagas</option>
+                                        <option value="deteccion_enfermedades">Detección de enfermedades</option>
+                                        <option value="plant_protect">Detección general de hojas</option>
+                                    </select>
+                                    <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-[#445048] text-[10px]">
+                                        <i class="fa-solid fa-chevron-down"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button onclick="enviarYOLO()" class="btn-flat w-full py-2.5 px-4 rounded-lg text-xs font-bold text-white bg-[#c23b2e] hover:bg-[#a63024] flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-magnifying-glass"></i> Analizar imagen con visión artificial
+                            </button>
+                        </div>
+
+                        <!-- Panel de Resultados -->
+                        <div class="flex flex-col items-center justify-center bg-white/50 border border-white/60 rounded-lg p-4 min-h-[220px]">
+                            <div class="relative w-full flex items-center justify-center min-h-[160px]">
+                                <img id="imagenResultado" class="hidden absolute inset-0 m-auto max-h-[160px] rounded-lg border border-[#2f7b4f]/40 object-contain" alt="Resultado anotado YOLO">
+                                <div id="resultPlaceholder" class="text-center py-8">
+                                    <i class="fa-solid fa-images text-[#445048] text-3xl mb-2"></i>
+                                    <p class="text-[11px] text-[#445048]">Esperando imagen para procesar...</p>
+                                </div>
+                            </div>
+
+                            <div id="resultado" class="mt-4 text-xs font-semibold text-center text-[#1f2b24] bg-white/70 border border-[#2f7b4f]/20 px-3 py-2 rounded-lg hidden"></div>
+                        </div>
+                    </div>
+
+                    <!-- Acordeón JSON -->
+                    <div class="mt-4 border border-white/60 rounded-lg overflow-hidden">
+                        <button onclick="document.getElementById('deteccionesWrapper').classList.toggle('hidden')" class="w-full py-2 px-4 bg-white/50 text-[#445048] text-[11px] font-semibold flex items-center justify-between hover:bg-white/70">
+                            <span><i class="fa-solid fa-code text-[#2f7b4f] mr-1.5"></i> Datos de detección (JSON)</span>
+                            <i class="fa-solid fa-angle-down"></i>
+                        </button>
+                        <div id="deteccionesWrapper" class="hidden">
+                            <pre id="detecciones" class="max-h-[120px] overflow-y-auto text-[10px] bg-white/80 p-3 text-[#1f2b24] font-mono leading-relaxed"></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Tarjeta: Chatbot -->
+                <section class="glass-card p-6 flex flex-col h-[400px]">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-lg font-semibold text-[#1f2b24] flex items-center gap-2">
+                            <i class="fa-solid fa-robot text-[#2f7b4f]"></i>
+                            Asistente Agrónomo Virtual
+                        </h2>
+                        <span class="text-[10px] bg-white/70 text-[#445048] border border-white/60 px-2 py-0.5 rounded-full font-semibold">Phi-2 IA</span>
+                    </div>
+
+                    <div id="chatBox" class="flex-1 overflow-y-auto p-3 bg-white/50 border border-white/60 rounded-lg space-y-3 mb-4 custom-scrollbar">
+                        <div class="flex justify-start">
+                            <div class="max-w-[85%] bg-white/90 border border-white/70 text-[#1f2b24] rounded-xl rounded-tl-none px-4 py-2.5 text-sm leading-relaxed">
+                                <div class="text-[10px] font-semibold text-[#2f7b4f] mb-1">Asistente</div>
+                                <div>Hola, soy tu asistente agrícola. Reviso el clima, el suelo y las fotos de tus plantas para sugerirte tratamientos. ¿Qué te gustaría saber hoy?</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-2 mb-3 overflow-x-auto pb-1.5 scrollbar-none text-[11px]">
+                        <button onclick="document.getElementById('userInput').value='¿Cómo controlo la araña roja?'; enviarPregunta()" class="flex-shrink-0 bg-white/60 border border-white/60 text-[#445048] hover:bg-white px-2.5 py-1 rounded-full">
+                            Araña roja
+                        </button>
+                        <button onclick="document.getElementById('userInput').value='¿Cuál es el rango de temperatura y riego para el tomate?'; enviarPregunta()" class="flex-shrink-0 bg-white/60 border border-white/60 text-[#445048] hover:bg-white px-2.5 py-1 rounded-full">
+                            Rango del tomate
+                        </button>
+                        <button onclick="document.getElementById('userInput').value='¿Cómo puedo prevenir la roya en mis plantas?'; enviarPregunta()" class="flex-shrink-0 bg-white/60 border border-white/60 text-[#445048] hover:bg-white px-2.5 py-1 rounded-full">
+                            Prevenir roya
+                        </button>
+                    </div>
+
+                    <div class="flex gap-2">
+                        <div class="relative flex-1">
+                            <input id="userInput" type="text" placeholder="Escribe tu duda sobre el cultivo..." class="w-full bg-white/80 border border-[#2f7b4f]/25 text-xs text-[#1f2b24] rounded-lg pl-4 pr-12 py-3 focus:border-[#2f7b4f] focus:ring-0 placeholder:text-[#7a8580]" />
+                            <button id="micBtn" onclick="activarVoz()" class="absolute inset-y-0 right-0 flex items-center pr-3.5 text-[#2f7b4f] hover:text-[#1f2b24]">
+                                <i class="fas fa-microphone"></i>
+                            </button>
+                        </div>
+                        <button onclick="enviarPregunta()" class="btn-flat bg-[#2f7b4f] hover:bg-[#286a44] text-white text-xs font-bold px-5 py-3 rounded-lg flex items-center gap-1.5">
+                            <span>Enviar</span>
+                            <i class="fa-regular fa-paper-plane text-[10px]"></i>
+                        </button>
+                    </div>
+                </section>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="glass-bar py-5 mt-10 text-center text-xs text-[#445048]">
+        <p>© 2025 Plant Protect. Dashboard del Asistente Agrícola Inteligente.</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

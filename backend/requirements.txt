@@ -1,0 +1,45 @@
+# ---------------------------------------------------------------------------
+# Dependencias del backend Flask (backend/model.py)
+#
+# IMPORTANTE: instala PyTorch (y torchvision/torchaudio, JUNTOS, del mismo
+# índice) APARTE, antes que el resto. Si los instalas sueltos o dejas que
+# "ultralytics" jale torchvision solo desde PyPI, pip puede terminar
+# mezclando versiones incompatibles entre sí (torch y torchvision están
+# compilados en pareja; una versión de torchvision suelta puede exigir una
+# versión de torch distinta a la que ya instalaste, causando errores raros
+# en tiempo de ejecución al usar YOLO).
+#
+#   # Con GPU NVIDIA (revisa tu versión de CUDA con `nvidia-smi`, arriba a la
+#   # derecha te dice el máximo que soporta tu driver; cu128 sirve para
+#   # cualquier driver CUDA 12.8+):
+#   pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu128
+#
+#   # Sin GPU / solo CPU:
+#   pip install torch torchvision torchaudio
+#
+# Después, instala el resto:
+#   pip install -r requirements.txt
+#
+# Si NO tienes GPU y no quieres instalar los ~2-4 GB de PyTorch + Transformers
+# en absoluto, puedes omitir por completo el bloque "IA / Visión" de abajo:
+# el servidor detecta automáticamente qué librerías faltan y arranca en modo
+# Simulación (MOCK_LLM / MOCK_VISION), sin romperse.
+# ---------------------------------------------------------------------------
+
+# --- Servidor web ---
+flask==3.1.0
+flask-cors==5.0.0
+requests==2.32.3
+
+# --- IA / Visión (opcional pero recomendado para respuestas y detecciones reales) ---
+# torch / torchvision / torchaudio NO van aquí a propósito - instálalos
+# primero por separado, juntos, del mismo índice (ver arriba)
+numpy<2.0
+pillow>=10.0
+transformers>=4.44
+accelerate>=0.33
+bitsandbytes>=0.43
+ultralytics>=8.2
+
+# --- Opcional: acelera/permite cargar el LLM en 4-bit (requiere GPU NVIDIA) ---
+# unsloth
